@@ -1,0 +1,12 @@
+<div class="profilo-container">
+  <h2>Profilo Utente</h2>
+
+  <div *ngIf="utente">
+    <p><strong>Nome:</strong> {{ utente.nome }}</p>
+    <p><strong>Cognome:</strong> {{ utente.cognome }}</p>
+    <p><strong>Email:</strong> {{ utente.email }}</p>
+    
+  </div>
+
+  <a routerLink="/cambia-password">Cambia password</a>
+</div>

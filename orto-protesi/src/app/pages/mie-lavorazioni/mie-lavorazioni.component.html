@@ -1,0 +1,107 @@
+<div class="container-mie-lavorazioni">
+  <h1>Le mie lavorazioni</h1>
+
+  <!-- Messaggio di successo o errore -->
+  <div *ngIf="messageType" class="alert" [ngClass]="messageType">
+    {{ message }}
+  </div>
+
+  <div *ngIf="lavorazioni.length === 0" class="no-data">
+    <p>Non hai ancora creato nessuna lavorazione.</p>
+    <a routerLink="/nuova-lavorazione-medico" class="btn-primary">Crea nuova lavorazione</a>
+  </div>
+
+  <!-- Debug delle lavorazioni -->
+  <div *ngIf="lavorazioni.length > 0 && lavorazioni[0].percorsiFileStl" class="debug-info" style="display: none;">
+    <h3>Debug STL files:</h3>
+    <pre>{{ lavorazioni[0].percorsiFileStl | json }}</pre>
+  </div>
+
+  <table *ngIf="lavorazioni.length > 0">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Paziente</th>
+        <th>Età</th>
+        <th>Data/Ora</th>
+        <th>Stato</th>
+        <th>Immagini</th>
+        <th>File STL</th>
+        <th>Azioni</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let lavorazione of lavorazioni; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ lavorazione.nomePaziente }} {{ lavorazione.cognomePaziente }}</td>
+        <td>{{ lavorazione.etaPaziente || '-' }}</td>
+        <td>{{ lavorazione.dataCreazione | formatDatetime }}</td>
+        <td>
+          <span class="badge" [ngClass]="'badge-' + getStatoBadgeClass(lavorazione.stato || '')">
+            {{ lavorazione.stato || 'N/D' }}
+          </span>
+        </td>
+        <td>
+          <div *ngIf="lavorazione.percorsiFileImmagini && lavorazione.percorsiFileImmagini.length > 0" class="img-thumbnails">
+            <div
+              *ngFor="let imgUrl of (lavorazione.percorsiFileImmagini | slice:0:3)"
+              class="thumb-container"
+              (click)="openImageViewer(imgUrl)"
+            >
+              <img [src]="imgUrl" alt="Thumbnail" class="thumbnail-img" />
+            </div>
+            <div *ngIf="lavorazione.percorsiFileImmagini.length > 3" class="more-images">
+              +{{ lavorazione.percorsiFileImmagini.length - 3 }}
+            </div>
+          </div>
+          <span *ngIf="!lavorazione.percorsiFileImmagini || lavorazione.percorsiFileImmagini.length === 0">Nessuna</span>
+        </td>
+
+        <!-- File STL -->
+        <td>
+          <div *ngIf="lavorazione.percorsiFileStl && lavorazione.percorsiFileStl.length > 0">
+            <div *ngFor="let stlUrl of lavorazione.percorsiFileStl" class="stl-item">
+              <button (click)="openStlViewer(stlUrl)" class="btn-view" title="Visualizza">👁️</button>
+              <!-- Mostriamo il pulsante di download solo se NON è un medico -->
+              <button *ngIf="!isMedico" (click)="downloadStl(stlUrl)" class="btn-download" title="Scarica">⬇️</button>
+              <span class="stl-filename">{{ getFileName(stlUrl) }}</span>
+            </div>
+          </div>
+          <span *ngIf="!lavorazione.percorsiFileStl || lavorazione.percorsiFileStl.length === 0">Nessuno</span>
+        </td>
+
+        <!-- Nuova colonna Azioni -->
+        <td>
+          <!-- Mostriamo il pulsante elimina solo se NON è un medico -->
+          <button *ngIf="!isMedico" class="btn-delete" (click)="eliminaLavorazione(lavorazione.id)" title="Elimina lavorazione">
+            <i class="fa fa-trash"></i> Elimina
+          </button>
+
+          <!-- Aggiungiamo il pulsante modifica per il medico -->
+          <button class="btn-edit" (click)="modificaLavorazione(lavorazione.id)" title="Modifica file allegati">
+            <i class="fa fa-edit"></i> Modifica allegati
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modale per immagini -->
+  <div *ngIf="modalImageUrl" class="modal" (click)="closeModal()">
+    <div class="modal-content image-viewer" (click)="$event.stopPropagation()">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <img [src]="modalImageUrl" alt="Immagine" class="modal-image"/>
+    </div>
+  </div>
+
+  <!-- Modale per STL -->
+  <div *ngIf="modalStlUrl" class="modal" (click)="closeModal()">
+    <div class="modal-content stl-viewer" (click)="$event.stopPropagation()">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <h3>Visualizzazione 3D: {{ fileService.getFileName(modalStlUrl) }}</h3>
+      <div class="stl-container">
+        <app-stl-viewer [fileUrl]="modalStlUrl"></app-stl-viewer>
+      </div>
+    </div>
+  </div>
+</div>

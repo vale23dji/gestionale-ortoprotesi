@@ -1,0 +1,25 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ortoprotesi-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Newstyle23@"
+    ports: ["1433:1433"]
+
+  api:
+    build:
+      context: ./OrtoProtesiApi
+      dockerfile: Dockerfile
+    container_name: ortoprotesi-api
+    ports: ["5233:8080"]
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: 
+        Server=db,1433;Database=OrtoProtesiDb;
+        User Id=sa;Password=Newstyle23@;
+        TrustServerCertificate=True;
+      AdminSeed__Email: alan.ahmad@gmail.com
+      AdminSeed__Password: Orto!25?
+    depends_on:                # ci limitiamo a dire che dipende da db
+      - db

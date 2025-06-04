@@ -1,0 +1,44 @@
+<nav class="navbar">
+  <div class="nav-left">
+    <a routerLink="/" class="logo">OrtoProtesi</a>
+  </div>
+
+  <div class="nav-right">
+    <!-- Se NON loggato -->
+    <ng-container *ngIf="(isLogged$ | async) !== true">
+      <a routerLink="/login">Login</a>
+      <a routerLink="/register">Registrati</a>
+    </ng-container>
+
+    <!-- Se loggato -->
+    <ng-container *ngIf="(isLogged$ | async) === true">
+      <!-- Nome utente
+      <span class="user-info" *ngIf="nome && cognome">
+        {{ nome }} {{ cognome }} ({{ ruolo$ | async }})
+      </span> -->
+
+      <!-- Link comuni per tutti gli utenti autenticati -->
+     <!-- <a routerLink="/profilo">Profilo</a>-->
+      <a routerLink="/cambia-password">Cambia Password</a>
+
+      <!-- Sezione per ADMIN -->
+      <ng-container *ngIf="(ruolo$ | async) === 'admin'">
+        <a routerLink="/dashboard">Dashboard</a>
+        <a routerLink="/clienti">Clienti</a>
+        <a routerLink="/nuova-lavorazione">Nuova lavorazione</a>
+        <a routerLink="/lavorazioni">Lavorazioni</a>
+        <a routerLink="/invita-medico">Invita Medico</a>
+        <a routerLink="/invita-medico-list">Lista Inviti</a>
+      </ng-container>
+
+      <!-- Sezione per MEDICO -->
+      <ng-container *ngIf="(ruolo$ | async) === 'medico'">
+        <a routerLink="/mie-lavorazioni">Le mie lavorazioni</a>
+        <a routerLink="/nuova-lavorazione-medico">Crea nuova lavorazione</a>
+      </ng-container>
+
+      <button class="btn-logout" (click)="logout()">Logout</button>
+    </ng-container>
+  </div>
+</nav>
+

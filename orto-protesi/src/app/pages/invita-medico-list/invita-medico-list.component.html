@@ -1,0 +1,43 @@
+<div class="inviti-wrapper">
+  <h2>Elenco Inviti Medici</h2>
+
+  <div *ngIf="loading" class="loading-spinner">Caricamento in corso...</div>
+  <div *ngIf="errore" class="errore">{{ errore }}</div>
+
+  <table *ngIf="!loading && inviti.length > 0" class="table inviti-table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Cognome</th>
+        <th>Email</th>
+        <th>Password Temporanea</th>
+        <th>Data Invito</th>
+        <th>Azioni</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let invito of inviti">
+        <td>{{ invito.nome }}</td>
+        <td>{{ invito.cognome }}</td>
+        <td>{{ invito.email }}</td>
+        <td>{{ invito.passwordTemporanea }}</td>
+        <td>{{ invito.dataInvito | date:'short' }}</td>
+        <td>
+          <button
+            class="delete-btn"
+            [disabled]="eliminazioneInCorso && idInEliminazione === invito.id"
+            (click)="eliminaInvito(invito.id, invito.email)">
+            <span *ngIf="eliminazioneInCorso && idInEliminazione === invito.id">
+              <span class="spinner"></span>
+            </span>
+            <span *ngIf="!(eliminazioneInCorso && idInEliminazione === invito.id)">
+              Elimina
+            </span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!loading && inviti.length === 0" class="no-records">Nessun invito trovato.</p>
+</div>

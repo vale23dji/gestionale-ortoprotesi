@@ -1,0 +1,59 @@
+<div class="nuova-lavorazione-form">
+  <h2>Crea nuova lavorazione</h2>
+
+  <label>Nome Paziente:</label>
+  <input type="text" [(ngModel)]="nomePaziente" name="nomePaziente" />
+
+  <label>Cognome Paziente:</label>
+  <input type="text" [(ngModel)]="cognomePaziente" name="cognomePaziente" />
+
+  <label>Età Paziente:</label>
+  <input type="number" [(ngModel)]="etaPaziente" name="etaPaziente" />
+
+  <label>Numero di telefono:</label>
+  <input type="text" [(ngModel)]="numeroTelefonoPaziente" name="telefonoPaziente" />
+
+  <label>Codice Fiscale:</label>
+  <input type="text" [(ngModel)]="codiceFiscalePaziente" name="codiceFiscalePaziente" />
+
+  <label>Tipo:</label>
+  <select [(ngModel)]="tipoSelezionato" name="tipo">
+    <option value="">-- Seleziona Tipo --</option>
+    <option *ngFor="let tipo of getTipi()" [value]="tipo">{{ tipo }}</option>
+  </select>
+
+  <div *ngIf="tipoSelezionato">
+    <label>Sotto-Tipo:</label>
+    <div class="radio-group">
+      <label *ngFor="let sotto of getSottoTipi()" class="radio-option">
+        <input type="radio" [(ngModel)]="sottoTipo" [value]="sotto" name="sottotipo" /> {{ sotto }}
+      </label>
+    </div>
+  </div>
+
+  <div *ngIf="sottoTipo">
+    <label>Opzioni:</label>
+    <div class="checkbox-group">
+      <label *ngFor="let opz of getOpzioni()" class="checkbox-option">
+        <input
+          type="checkbox"
+          [checked]="opzioniSelezionate.includes(opz)"
+          (change)="toggleOpzione(opz)"
+          name="opzioni"
+        />
+        {{ opz }}
+      </label>
+    </div>
+  </div>
+
+  <label>Carica Immagini:</label>
+  <input type="file" (change)="onImageSelected($event)" multiple accept="image/*" />
+
+  <label>Carica File STL:</label>
+  <input type="file" (change)="onStlSelected($event)" multiple accept=".stl" />
+
+  <label>Specifiche Tecniche:</label>
+  <textarea [(ngModel)]="specificheTecniche" name="specificheTecniche"></textarea>
+
+  <button (click)="submit()">Salva Lavorazione</button>
+</div>

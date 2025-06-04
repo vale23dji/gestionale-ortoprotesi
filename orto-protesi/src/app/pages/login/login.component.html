@@ -1,0 +1,48 @@
+<form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+  <h2>Accesso</h2>
+
+  <!-- EMAIL -->
+  <div>
+    <label>Email</label>
+    <input type="email" formControlName="email" />
+
+    <small *ngIf="submitted && f['email'].errors?.['required']">
+      L'email è obbligatoria.
+    </small>
+    <small *ngIf="submitted && f['email'].errors?.['email']">
+      Inserisci un'email valida.
+    </small>
+  </div>
+
+  <!-- PASSWORD -->
+<div class="password-field">
+  <label>Password</label>
+  <input [type]="showPassword ? 'text' : 'password'" formControlName="password" autocomplete="current-password"/>
+  <small *ngIf="submitted && f['password'].errors?.['required']">La password è obbligatoria.</small>
+</div>
+
+<label>
+  <input type="checkbox" formControlName="ricordaUtente"/>
+  Ricordami
+</label>
+
+
+<!-- TOGGLE -->
+<div class="toggle-visibility">
+  <label>
+    <input type="checkbox" [(ngModel)]="showPassword" [ngModelOptions]="{standalone: true}"/> Mostra password
+  </label>
+</div>
+
+
+  <!-- MESSAGGIO -->
+  <div *ngIf="messaggio" [class.error]="errore" [class.success]="!errore">
+    {{ messaggio }}
+  </div>
+
+  <button type="submit" [disabled]="loading">Accedi</button>
+</form>
+
+<!--<div *ngIf="errore && messaggio.includes('verificare la tua email')">
+  <button type="button" (click)="resendEmail()">Reinvia email di verifica</button>
+</div> -->

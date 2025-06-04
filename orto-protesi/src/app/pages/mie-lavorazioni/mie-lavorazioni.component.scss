@@ -1,0 +1,272 @@
+.container-mie-lavorazioni {
+  padding: 20px;
+}
+
+// Alert per messaggi di errore/successo
+.alert {
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  &.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  &.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+thead {
+  background-color: #f2f2f2;
+}
+
+th, td {
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+// Stile per i badge dello stato
+.badge {
+  padding: 5px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  display: inline-block;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.badge-in-lavorazione {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.badge-completata {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+// Visualizzazione thumbnails
+.img-thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-width: 160px;
+}
+
+.thumb-container {
+  width: 45px;
+  height: 45px;
+  overflow: hidden;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.thumbnail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.more-images {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #666;
+}
+
+// Visualizzazione STL
+.stl-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 13px;
+}
+
+.stl-filename {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.btn-view, .btn-download {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  margin-right: 5px;
+  padding: 0;
+}
+
+// Bottone delete
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  
+  &:hover {
+    background-color: #c82333;
+  }
+  
+  i {
+    margin-right: 5px;
+    font-size: 12px;
+  }
+}
+
+// Modal
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  position: relative;
+  max-width: 80%;
+  max-height: 80%;
+  overflow: auto;
+}
+
+.image-viewer {
+  padding: 10px;
+}
+
+.modal-image {
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+
+.stl-viewer {
+  width: 80%;
+  height: 80%;
+  padding: 0;
+}
+
+.stl-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
+
+// Modale di conferma eliminazione
+.confirm-modal .modal-content {
+  width: 400px;
+  padding: 20px;
+}
+
+.confirm-content h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.confirm-content p.warning {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-confirm-delete {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+// Responsive
+@media screen and (max-width: 768px) {
+  table {
+    font-size: 12px;
+  }
+  
+  th, td {
+    padding: 8px;
+  }
+}
+
+// No data message
+.no-data {
+  text-align: center;
+  padding: 30px 0;
+  color: #666;
+  
+  .btn-primary {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-top: 15px;
+    
+    &:hover {
+      background-color: #0069d9;
+    }
+  }
+}
+

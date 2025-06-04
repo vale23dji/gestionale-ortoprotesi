@@ -1,0 +1,79 @@
+<div class="nuova-lavorazione-form">
+  <h2>Nuova Lavorazione</h2>
+
+  <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <!--<label>Cliente:</label>
+  <select [(ngModel)]="clienteSelezionatoId" name="cliente">
+    <option *ngFor="let cliente of clienti" [value]="cliente.id">
+      {{ cliente.nomeDottore }} {{ cliente.cognomeDottore }}
+    </option>
+  </select>-->
+
+  <!-- SOLO se sei admin mostra la select dei clienti -->
+<div *ngIf="ruolo === 'admin'">
+  <label>Cliente:</label>
+  <select [(ngModel)]="clienteSelezionatoId" name="cliente">
+    <option *ngFor="let cliente of clienti" [value]="cliente.id">
+      {{ cliente.nomeDottore }} {{ cliente.cognomeDottore }}
+    </option>
+  </select>
+</div>
+
+<!-- Se sei medico, mostra cliente fisso (disabilitato) -->
+<div *ngIf="ruolo === 'medico'">
+  <label>Cliente:</label>
+  <input type="text" [value]="utente?.nome + ' ' + utente?.cognome" disabled />
+</div>
+
+  <label>Nome Paziente:</label>
+  <input type="text" [(ngModel)]="nomePaziente" name="nomePaziente" />
+  <label>Cognome Paziente:</label>
+  <input type="text" [(ngModel)]="cognomePaziente" name="cognomePaziente" />
+  <label>Età Paziente:</label>
+  <input type="number" [(ngModel)]="etaPaziente" name="etaPaziente" />
+
+  <label>Tipo:</label>
+  <select [(ngModel)]="tipoSelezionato" name="tipo">
+    <option value="">-- Seleziona --</option>
+    <option *ngFor="let tipo of getTipi()" [value]="tipo">{{ tipo }}</option>
+  </select>
+
+  <div *ngIf="tipoSelezionato">
+    <label>Sotto-Tipo:</label>
+    <div class="radio-group">
+      <label *ngFor="let sotto of getSottoTipi()" class="radio-option">
+        <input type="radio" [(ngModel)]="sottoTipo" [value]="sotto" name="sottotipo" /> {{ sotto }}
+      </label>
+    </div>
+  </div>
+
+  <div *ngIf="sottoTipo">
+    <label>Opzioni: {{ sottoTipo }}</label>
+    <div class="checkbox-group">
+      <label *ngFor="let opz of getOpzioni()" class="checkbox-option">
+        <input type="checkbox" [checked]="opzioniSelezionate.includes(opz)" (change)="toggleOpzione(opz)" name="opzioni" /> {{ opz }}
+      </label>
+    </div>
+  </div>
+
+  <label>Specifiche tecniche:</label>
+  <textarea [(ngModel)]="specificheTecniche" name="specificheTecniche"></textarea>
+
+  <label>Stato:</label>
+  <select [(ngModel)]="stato" name="stato">
+    <option value="in lavorazione">In lavorazione</option>
+    <option value="concluso">Concluso</option>
+  </select>
+
+  <!-- Upload Immagini -->
+    <label>Immagini:</label>
+    <input type="file" (change)="onFileChange($event, 'immagini')" multiple accept="image/*" />
+
+    <!-- Upload STL -->
+    <label>File STL:</label>
+    <input type="file" (change)="onFileChange($event, 'stl')" multiple accept=".stl" />
+
+
+  <button (click)="submit()">Salva</button>
+</div>

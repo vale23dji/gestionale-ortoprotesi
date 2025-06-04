@@ -1,0 +1,177 @@
+<div *ngIf="cliente; else utenteProvvisorio" class="cliente-dettaglio">
+  <h2>{{ cliente.nomeDottore }} {{ cliente.cognomeDottore }}</h2>
+  <div class="info-grid">
+    <p><strong>Email:</strong> {{ cliente.email }}</p>
+    <p><strong>Cellulare:</strong> {{ cliente.telefonoCellulare }}</p>
+    <p><strong>Fisso:</strong> {{ cliente.telefonoFisso }}</p>
+    <p><strong>Codice Fiscale:</strong> {{ cliente.codiceFiscale }}</p>
+    <p><strong>P.IVA:</strong> {{ cliente.partitaIva }}</p>
+    <p><strong>Codice SDI:</strong> {{ cliente.codiceSDI }}</p>
+    <p><strong>Studio Dentistico:</strong> {{ cliente.nomeStudio }}, {{ cliente.viaStudio }} - {{ cliente.cittaStudio }}</p>
+  </div>
+</div>
+
+<!-- Se non esiste cliente, mostriamo dati utente -->
+<ng-template #utenteProvvisorio>
+  <div *ngIf="datiMedico" class="utente-provvisorio">
+    <h2>{{ datiMedico.nome }} {{ datiMedico.cognome }}</h2>
+    <div class="info-grid">
+      <p><strong>Email:</strong> {{ datiMedico.email }}</p>
+      <p><strong>Cellulare:</strong> {{ datiMedico.telefonoCellulare }}</p>
+      <p><strong>Codice Fiscale:</strong> {{ datiMedico.codiceFiscale }}</p>
+    </div>
+
+    <button class="btn-crea" (click)="creaClienteDaMedico()">➕ Crea Cliente da questo Medico</button>
+  </div>
+</ng-template>
+
+<hr />
+
+<h3 class="section-title">
+  <!-- Modifica il titolo in base al numero di lavorazioni -->
+  <ng-container *ngIf="lavorazioni.length === 1">
+    Dettaglio Lavorazione
+  </ng-container>
+  <ng-container *ngIf="lavorazioni.length !== 1">
+    Lavorazioni associate
+  </ng-container>
+</h3>
+
+<table class="styled-table" *ngIf="lavorazioni.length > 0; else nessunaLavorazione">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Tipo</th>
+      <th>Specifiche</th>
+      <th>Stato</th>
+      <th>Data Creazione</th>
+      <th>Nome Paziente</th>
+      <th>Cognome Paziente</th>
+      <th>Età</th>
+      <th>File allegati</th>
+      <th>Azioni</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let l of lavorazioni">
+      <td>{{ l.id }}</td>
+
+      <td *ngIf="!editModes.get(l.id!)">
+        <div class="tipo-wrapper" *ngIf="l.tipiLavorazione.length >= 2">
+          <div><strong>Tipo:</strong> {{ l.tipiLavorazione[0] }}</div>
+          <div><strong>Sottotipo:</strong> {{ l.tipiLavorazione[1] }}</div>
+          <div class="pill-container">
+            <span class="tipo-pill" *ngFor="let opzione of l.tipiLavorazione.slice(2)">
+              {{ opzione }}
+            </span>
+          </div>
+        </div>
+      </td>
+
+      <td *ngIf="editModes.get(l.id!)">
+        <input [(ngModel)]="l.tipiLavorazioneStringEdit" placeholder="Es: Ortodonzia > Fissa > Espansore" />
+      </td>
+
+      <td *ngIf="!editModes.get(l.id!)">{{ l.specificheTecniche || '-' }}</td>
+      <td *ngIf="editModes.get(l.id!)">
+        <textarea [(ngModel)]="l.specificheTecniche"></textarea>
+      </td>
+
+      <td *ngIf="!editModes.get(l.id!)">
+        <span class="stato-badge" [ngClass]="{
+          'concluso': l.stato === 'concluso',
+          'in-lavorazione': l.stato === 'in lavorazione'
+        }">{{ l.stato }}</span>
+      </td>
+
+      <td *ngIf="editModes.get(l.id!)">
+        <select [(ngModel)]="l.stato">
+          <option value="in lavorazione">In lavorazione</option>
+          <option value="concluso">Concluso</option>
+        </select>
+      </td>
+
+      <td>{{ l.nomePaziente }}</td>
+      <td>{{ l.cognomePaziente }}</td>
+      <td>{{ l.etaPaziente }}</td>
+
+      <!-- COLONNA PER I FILE ALLEGATI -->
+      <td class="file-cell">
+        <div class="file-container">
+          <!-- Visualizzazione immagini con anteprima -->
+          <div *ngIf="l.percorsiFileImmagini && l.percorsiFileImmagini.length > 0" class="file-section">
+            <div class="image-thumbnails">
+              <div *ngFor="let img of l.percorsiFileImmagini" class="thumbnail">
+                <img [src]="fileService.getImageViewerUrl(img)" (click)="apriImmagine(img)" title="Clicca per visualizzare" />
+                <div class="download-icon" (click)="downloadFile(img, $event)" title="Scarica immagine">⬇️</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visualizzazione file STL -->
+          <div *ngIf="l.percorsiFileStl && l.percorsiFileStl.length > 0" class="file-section">
+            <div class="stl-list">
+              <div *ngFor="let stl of l.percorsiFileStl; let i = index" class="stl-item">
+                <div class="stl-icon" (click)="visualizzaStl(stl)" title="Visualizza">🔍</div>
+                <span class="stl-name">STL #{{ i+1 }}</span>
+                <div class="download-icon" (click)="downloadFile(stl, $event)" title="Scarica">⬇️</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Messaggio se non ci sono file -->
+          <div *ngIf="(!l.percorsiFileImmagini || l.percorsiFileImmagini.length === 0) &&
+                     (!l.percorsiFileStl || l.percorsiFileStl.length === 0)" class="no-file">
+            Nessun file
+          </div>
+        </div>
+      </td>
+
+      <td>
+        <ng-container *ngIf="!editModes.get(l.id!)">
+          <button class="btn-modifica" (click)="modificaLavorazione(l)">✏️</button>
+          <button class="btn-elimina" (click)="eliminaLavorazione(l.id)">🗑</button>
+        </ng-container>
+
+        <ng-container *ngIf="editModes.get(l.id!)">
+          <button class="btn-salva" (click)="salvaLavorazione(l)">💾</button>
+          <button class="btn-annulla" (click)="editModes.delete(l.id!)">↩️</button>
+        </ng-container>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #nessunaLavorazione>
+  <p class="no-data">Nessuna lavorazione associata a questo cliente.</p>
+</ng-template>
+
+<div *ngIf="!cliente">
+  <button *ngIf="datiMedico && !clienteCreatoDaMedico" (click)="creaClienteDaMedico()" class="btn-primary">
+    Crea cliente da questo medico
+  </button>
+</div>
+
+<!-- Aggiungi dopo la tabella -->
+<div *ngIf="lavorazioni.length === 1 && route.snapshot.queryParamMap.has('lavorazioneId')" class="view-all-link">
+  <a [routerLink]="['/clienti', cliente?.id || datiMedico?.id]" [queryParams]="{}">
+    Visualizza tutte le lavorazioni di questo cliente
+  </a>
+</div>
+
+<!-- Modale per visualizzare le immagini -->
+<div *ngIf="modalImageUrl" class="image-modal" (click)="chiudiModale()">
+  <div class="modal-content">
+    <span class="close-modal" (click)="chiudiModale()">&times;</span>
+    <img [src]="modalImageUrl" alt="Immagine ingrandita" />
+  </div>
+</div>
+
+<!-- Modale per i file STL -->
+<div *ngIf="modalStlUrl" class="stl-modal" (click)="chiudiModaleStl()">
+  <div class="stl-modal-content" (click)="$event.stopPropagation()">
+    <span class="close-modal" (click)="chiudiModaleStl()">&times;</span>
+    <h3>Visualizzazione 3D</h3>
+    <app-stl-viewer [fileUrl]="modalStlUrl"></app-stl-viewer>
+  </div>
+</div>

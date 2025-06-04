@@ -1,0 +1,46 @@
+# Node
+node_modules/
+dist/
+.tmp/
+.angular/
+
+# Angular cache
+.angular/cache/
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Dotnet
+bin/
+obj/
+*.user
+*.suo
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# Env
+.env
+.env.*
+
+# System
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Coverage
+coverage/
+lcov-report/
+
+# Others
+*.stl
+*.zip
+*.bak

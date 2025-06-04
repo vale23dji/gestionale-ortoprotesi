@@ -1,0 +1,131 @@
+<div class="lavorazioni-container">
+  <h1>Lista Lavorazioni</h1>
+
+  <!-- Messaggio di errore -->
+  <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Cliente</th>
+        <th>Paziente</th>
+        <th>Data/Ora</th>
+        <th>Stato</th>
+        <th>Azioni</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let lavorazione of lavorazioni; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>
+          <ng-container *ngIf="lavorazione.clienteId; else medicoAnonimo">
+            <!-- Modifica qui per passare anche l'ID della lavorazione -->
+            <a [routerLink]="['/clienti', lavorazione.clienteId]"
+               [queryParams]="{lavorazioneId: lavorazione.id}">
+              {{ lavorazione.nomeCompletoCliente }}
+            </a>
+          </ng-container>
+          <ng-template #medicoAnonimo>
+            <span>{{ lavorazione.nomeCompletoCliente || 'N/D' }} (medico)</span>
+          </ng-template>
+        </td>
+        <td>{{ lavorazione.nomePaziente }} {{ lavorazione.cognomePaziente }}</td>
+        <td>{{ lavorazione.dataCreazione | formatDatetime }}</td>
+        <td>
+          <span class="stato-badge" [ngClass]="lavorazione.stato">{{ lavorazione.stato }}</span>
+        </td>
+        <td>
+          <button class="btn-dettaglio" (click)="visualizzaLavorazioniCliente(lavorazione)">
+            Dettaglio lavorazione
+          </button>
+          <button class="btn-elimina" (click)="eliminaLavorazione(lavorazione.id || -1)">Elimina</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Dettaglio lavorazione -->
+  <div *ngIf="clienteSelezionato" class="lavorazioni-dettaglio">
+    <div class="dettaglio-header">
+      <h2>Dettaglio lavorazione del paziente {{ clienteSelezionato.nomePaziente }} {{ clienteSelezionato.cognomePaziente }}</h2>
+      <button class="btn-close" (click)="chiudiDettaglio()">✕</button>
+    </div>
+
+    <table class="dettaglio-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Paziente</th>
+          <th>Data/Ora</th>
+          <th>Stato</th>
+          <th>Specifiche</th>
+          <th>Tipi</th>
+          <th>File</th>
+          <th>Azioni</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let lavorazione of lavorazioniClienteSelezionato">
+          <td>{{ lavorazione.id }}</td>
+          <td>{{ lavorazione.nomePaziente }} {{ lavorazione.cognomePaziente }}</td>
+          <td>{{ lavorazione.dataCreazione | formatDatetime }}</td>
+          <td>
+            <span class="stato-badge" [ngClass]="lavorazione.stato">
+              {{ lavorazione.stato }}
+            </span>
+          </td>
+          <td>{{ lavorazione.specificheTecniche || '-' }}</td>
+          <td>
+            <div class="tipo-wrapper" *ngIf="lavorazione.tipiLavorazione && lavorazione.tipiLavorazione.length > 0">
+              <div><strong>Tipo:</strong> {{ lavorazione.tipiLavorazione[0] }}</div>
+              <div *ngIf="lavorazione.tipiLavorazione.length > 1">
+                <strong>Sottotipo:</strong> {{ lavorazione.tipiLavorazione[1] }}
+              </div>
+              <div class="pill-container">
+                <span class="tipo-pill" *ngFor="let opzione of lavorazione.tipiLavorazione.slice(2)">
+                  {{ opzione }}
+                </span>
+              </div>
+            </div>
+          </td>
+          <td class="file-cell">
+            <div class="file-container">
+              <!-- Visualizzazione immagini con anteprima -->
+              <div *ngIf="lavorazione.percorsiFileImmagini && lavorazione.percorsiFileImmagini.length > 0" class="file-section">
+                <div class="image-thumbnails">
+                  <div *ngFor="let img of lavorazione.percorsiFileImmagini" class="thumbnail">
+                    <img [src]="img" (click)="visualizzaImmagine(img)" title="Clicca per visualizzare" />
+                    <div class="download-icon" (click)="downloadFile(img)" title="Scarica immagine">⬇️</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Visualizzazione file STL -->
+              <div *ngIf="lavorazione.percorsiFileStl && lavorazione.percorsiFileStl.length > 0" class="file-section">
+                <div class="stl-list">
+                  <div *ngFor="let stl of lavorazione.percorsiFileStl; let i = index" class="stl-item">
+                    <div class="stl-icon" (click)="visualizzaStl(stl)" title="Visualizza">🔍</div>
+                    <span class="stl-name">STL #{{ i+1 }}</span>
+                    <div class="download-icon" (click)="downloadFile(stl)" title="Scarica">⬇️</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Messaggio se non ci sono file -->
+              <div *ngIf="(!lavorazione.percorsiFileImmagini || lavorazione.percorsiFileImmagini.length === 0) &&
+                        (!lavorazione.percorsiFileStl || lavorazione.percorsiFileStl.length === 0)" class="no-file">
+                Nessun file
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn-elimina" (click)="eliminaLavorazione(lavorazione.id || -1)">Elimina</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

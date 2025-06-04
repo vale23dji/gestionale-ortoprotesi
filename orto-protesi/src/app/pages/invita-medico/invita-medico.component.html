@@ -1,0 +1,26 @@
+<section class="invita-medico">
+  <h2>Invita un nuovo medico</h2>
+
+  <form (ngSubmit)="invita()" #form="ngForm">
+    <input type="text" [(ngModel)]="medico.nomeDottore" name="nomeDottore" placeholder="Nome Dottore" required />
+    <input type="text" [(ngModel)]="medico.cognomeDottore" name="cognomeDottore" placeholder="Cognome Dottore" required />
+    <input type="email" [(ngModel)]="medico.email" name="email" placeholder="Email" required />
+    <input type="text" [(ngModel)]="medico.telefonoCellulare" name="telefonoCellulare" placeholder="Telefono Cellulare" />
+    <input type="text" [(ngModel)]="medico.telefonoFisso" name="telefonoFisso" placeholder="Telefono Fisso" />
+    <input type="text" [(ngModel)]="medico.codiceFiscale" name="codiceFiscale" placeholder="Codice Fiscale" />
+    <input type="text" [(ngModel)]="medico.partitaIva" name="partitaIva" placeholder="Partita IVA" />
+    <input type="text" [(ngModel)]="medico.nomeStudio" name="nomeStudio" placeholder="Nome Studio Dentistico" />
+    <input type="text" [(ngModel)]="medico.viaStudio" name="viaStudio" placeholder="Via Studio Dentistico" />
+    <input type="text" [(ngModel)]="medico.cittaStudio" name="cittaStudio" placeholder="Città Studio" />
+    <input type="text" [(ngModel)]="medico.codiceSDI" name="codiceSDI" placeholder="Codice SDI" />
+    <input type="text" [(ngModel)]="medico.passwordTemporanea" name="passwordTemporanea" placeholder="Password (facoltativa)"/>
+
+    <button type="submit">Crea medico</button>
+  </form>
+  <div *ngIf="credenziali" class="credenziali">
+    <h3>Credenziali generate</h3>
+    <p><strong>Email:</strong> {{ credenziali.email }}</p>
+    <p><strong>Password:</strong> {{ credenziali.password }}</p>
+    <p class="info">Comunicale al medico per accedere alla piattaforma.</p>
+  </div>
+</section>

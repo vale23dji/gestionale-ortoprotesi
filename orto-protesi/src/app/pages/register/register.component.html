@@ -1,0 +1,66 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+  <h2>Registrazione</h2>
+
+  <!-- NOME -->
+  <div>
+    <label>Nome</label>
+    <input type="text" formControlName="nome" />
+    <small *ngIf="submitted && f['nome'].errors?.['required']">Il nome è obbligatorio.</small>
+  </div>
+
+  <!-- COGNOME -->
+  <div>
+    <label>Cognome</label>
+    <input type="text" formControlName="cognome" />
+    <small *ngIf="submitted && f['cognome'].errors?.['required']">Il cognome è obbligatorio.</small>
+  </div>
+
+  <!-- EMAIL -->
+  <div>
+    <label>Email</label>
+    <input type="email" formControlName="email" />
+    <small *ngIf="submitted && f['email'].errors?.['required']">L'email è obbligatoria.</small>
+    <small *ngIf="submitted && f['email'].errors?.['email']">Inserisci un'email valida.</small>
+  </div>
+
+  <!-- CONFERMA EMAIL -->
+  <div>
+    <label>Conferma Email</label>
+    <input type="email" formControlName="confermaEmail" />
+    <small *ngIf="submitted && f['confermaEmail'].errors?.['required']">La conferma è obbligatoria.</small>
+    <small *ngIf="submitted && registerForm.errors?.['emailMismatch']">Le email non coincidono.</small>
+  </div>
+
+  <!-- PASSWORD -->
+<div class="password-field">
+  <label>Password</label>
+  <input [type]="showPassword ? 'text' : 'password'" formControlName="password" autocomplete="new-password" />
+  <small *ngIf="submitted && f['password'].errors?.['required']">La password è obbligatoria.</small>
+  <small *ngIf="submitted && f['password'].errors?.['pattern']">
+    Min. 8 caratteri, una maiuscola, una minuscola, un numero e un simbolo.
+  </small>
+</div>
+
+<!-- CONFERMA PASSWORD -->
+<div class="password-field">
+  <label>Conferma Password</label>
+  <input [type]="showPassword ? 'text' : 'password'" formControlName="confermaPassword" autocomplete="new-password" />
+  <small *ngIf="submitted && f['confermaPassword'].errors?.['required']">La conferma è obbligatoria.</small>
+  <small *ngIf="submitted && registerForm.errors?.['passwordMismatch']">Le password non coincidono.</small>
+</div>
+
+<!-- TOGGLE VISIBILITÀ -->
+<div class="toggle-visibility">
+  <label>
+    <input type="checkbox" [(ngModel)]="showPassword" [ngModelOptions]="{ standalone: true }" /> Mostra password
+  </label>
+</div>
+
+  <!-- MESSAGGI -->
+  <div *ngIf="messaggio" [class.error]="errore" [class.success]="!errore">
+    {{ messaggio }}
+  </div>
+
+  <!-- SUBMIT -->
+  <button type="submit" [disabled]="loading">Registrati</button>
+</form>

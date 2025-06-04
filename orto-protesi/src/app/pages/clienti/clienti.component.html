@@ -1,0 +1,75 @@
+<h2>Aggiungi Cliente</h2>
+<form (ngSubmit)="aggiungiCliente()">
+  <input type="text" [(ngModel)]="nuovoCliente.nomeDottore" name="nomeDottore" placeholder="Nome Dottore" required />
+  <input type="text" [(ngModel)]="nuovoCliente.cognomeDottore" name="cognomeDottore" placeholder="Cognome Dottore" required />
+  <input type="email" [(ngModel)]="nuovoCliente.email" name="email" placeholder="Email" required />
+  <input type="text" [(ngModel)]="nuovoCliente.telefonoCellulare" name="telefonoCellulare" placeholder="Telefono Cellulare" />
+  <input type="text" [(ngModel)]="nuovoCliente.telefonoFisso" name="telefonoFisso" placeholder="Telefono Fisso" />
+  <input type="text" [(ngModel)]="nuovoCliente.codiceFiscale" name="codiceFiscale" placeholder="Codice Fiscale" />
+  <input type="text" [(ngModel)]="nuovoCliente.partitaIva" name="partitaIva" placeholder="Partita IVA" />
+  <input type="text" [(ngModel)]="nuovoCliente.nomeStudio" name="nomeStudio" placeholder="Nome Studio" />
+  <input type="text" [(ngModel)]="nuovoCliente.viaStudio" name="viaStudio" placeholder="Via Studio" />
+  <input type="text" [(ngModel)]="nuovoCliente.cittaStudio" name="cittaStudio" placeholder="Città Studio" />
+  <input type="text" [(ngModel)]="nuovoCliente.codiceSDI" name="codiceSDI" placeholder="Codice SDI" />
+  <button type="submit">Aggiungi</button>
+</form>
+
+<div class="messaggi-feedback">
+  <div *ngIf="aggiuntaSuccesso" class="success-message">
+    <span>✓</span> Operazione completata con successo!
+  </div>
+  <div *ngIf="erroreMessagio" class="error-message">
+    <span>✗</span> {{ erroreMessagio }}
+  </div>
+</div>
+
+<h2>Clienti</h2>
+
+<input
+  type="text"
+  [(ngModel)]="filtroPerCliente"
+  placeholder="🔍 Cerca per nome, cognome, email, telefono..."
+  name="filtroClienti"
+/>
+
+<div class="clienti-grid" *ngIf="clientiFiltrati.length > 0; else nessuno">
+  <div class="card" *ngFor="let cliente of clientiFiltrati">
+    <div class="info">
+      <h3>{{ cliente.nomeDottore }} {{ cliente.cognomeDottore }}</h3>
+      <p><strong>Email: </strong> {{ cliente.email }}</p>
+      <p><strong>Cellulare: </strong> {{ cliente.telefonoCellulare || 'N/D' }}</p>
+      <p><strong>Fisso: </strong> {{ cliente.telefonoFisso || 'N/D' }}</p>
+      <p><strong>Studio: </strong> {{ cliente.nomeStudio }}, {{ cliente.viaStudio }} - {{ cliente.cittaStudio }}</p>
+      <p><strong>CF: </strong>{{ cliente.codiceFiscale }} </p>
+      <p><strong>P.IVA:</strong>{{ cliente.partitaIva }}, SDI: {{ cliente.codiceSDI }}</p>
+    </div>
+
+    <div class="azioni" *ngIf="clienteInModifica?.id !== cliente.id; else modificaForm">
+      <button (click)="modifica(cliente)">✏️ Modifica</button>
+      <button (click)="eliminaCliente(cliente.id!)">🗑 Elimina</button>
+    </div>
+
+    <ng-template #modificaForm>
+      <div *ngIf="clienteInModifica">
+        <input [(ngModel)]="clienteInModifica.nomeDottore" name="nomeModifica" placeholder="Nome Dottore" />
+        <input [(ngModel)]="clienteInModifica.cognomeDottore" name="cognomeModifica" placeholder="Cognome Dottore" />
+        <input [(ngModel)]="clienteInModifica.email" name="emailModifica" placeholder="Email" />
+        <input [(ngModel)]="clienteInModifica.telefonoCellulare" name="cellulareModifica" placeholder="Telefono Cellulare" />
+        <input [(ngModel)]="clienteInModifica.telefonoFisso" name="fissoModifica" placeholder="Telefono Fisso" />
+        <input [(ngModel)]="clienteInModifica.codiceFiscale" name="cfModifica" placeholder="Codice Fiscale" />
+        <input [(ngModel)]="clienteInModifica.partitaIva" name="pivaModifica" placeholder="Partita IVA" />
+        <input [(ngModel)]="clienteInModifica.nomeStudio" name="studioModifica" placeholder="Nome Studio" />
+        <input [(ngModel)]="clienteInModifica.viaStudio" name="viaModifica" placeholder="Via Studio" />
+        <input [(ngModel)]="clienteInModifica.cittaStudio" name="cittaModifica" placeholder="Città Studio" />
+        <input [(ngModel)]="clienteInModifica.codiceSDI" name="sdiModifica" placeholder="Codice SDI" />
+        <button (click)="salvaModifiche()">Salva</button>
+        <button (click)="annullaModifica()">Annulla</button>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<ng-template #nessuno>
+  <p>Nessun cliente trovato.</p>
+</ng-template>
+

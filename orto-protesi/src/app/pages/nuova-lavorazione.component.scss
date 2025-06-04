@@ -1,0 +1,73 @@
+.nuova-lavorazione-form {
+  max-width: 600px;
+  margin: auto;
+  padding: 2rem;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #0077cc;
+  }
+
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  select,
+  textarea,
+  input[type="radio"],
+  input[type="checkbox"] {
+    margin-top: 0.5rem;
+  }
+
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+
+  .radio-group,
+  .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .radio-option,
+  .checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #eaeaea;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  button {
+    margin-top: 2rem;
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #0077cc;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: #005fa3;
+    }
+  }
+}

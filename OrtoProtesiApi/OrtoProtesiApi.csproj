@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableDefaultContentItems>false</EnableDefaultContentItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization"          Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi"                Version="8.0.13" />
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer"     Version="9.0.3" />
+
+    <!-- chiuso correttamente ↓ -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+
+    <!-- nuovo pacchetto -->
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.6" />
+
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical"      Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
+    <PackageReference Include="SendGrid"                         Version="9.29.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore"           Version="6.6.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt"  Version="8.7.0" />
+
+    <!-- copia wwwroot -->
+     <Content Include="wwwroot/**">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
