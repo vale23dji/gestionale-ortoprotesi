@@ -1,0 +1,42 @@
+<footer class="app-footer">
+  <div class="footer-content">
+    <div class="footer-section info">
+      <h3>Orto-Protesi Gestionale</h3>
+      <p>Sistema di gestione per studi dentistici e ortopedici</p>
+      <p>© {{ annoCorrente }} Tutti i diritti riservati</p>
+    </div>
+
+    <div class="footer-section links">
+      <h3>Link Utili</h3>
+      <ul>
+        <li><a href="javascript:void(0)" (click)="vaiA('dashboard')">Dashboard</a></li>
+        <li><a href="javascript:void(0)" (click)="vaiA('clienti')">Clienti</a></li>
+        <li><a href="javascript:void(0)" (click)="vaiA('appuntamenti')">Appuntamenti</a></li>
+        <li><a href="javascript:void(0)" (click)="vaiA('fatturazione')">Fatturazione</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section support">
+      <h3>Assistenza</h3>
+      <ul>
+        <li><a href="javascript:void(0)" (click)="vaiA('contatti')">Contattaci</a></li>
+        <li><a href="javascript:void(0)" (click)="vaiA('faq')">FAQ</a></li>
+        <li><a href="javascript:void(0)" (click)="vaiA('guida')">Guida utente</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section legal">
+      <h3>Informazioni legali</h3>
+      <ul>
+        <li><a href="javascript:void(0)" (click)="vaiA('privacy')">Privacy Policy</a></li>
+        <li><a href="javascript:void(0)" (click)="vaiA('termini')">Termini di Servizio</a></li>
+        <li><a href="javascript:void(0)" (click)="vaiA('gdpr')">GDPR</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>Versione {{ appVersion }} | Ultimo aggiornamento: {{ dataUltimoAggiornamento }}</p>
+    <p *ngIf="utenteLoggato">Utente: {{ utenteLoggato.nome }} {{ utenteLoggato.cognome }} | <a href="javascript:void(0)" (click)="logout()">Esci</a></p>
+  </div>
+</footer>

@@ -1,0 +1,74 @@
+.termini-servizio-page {
+  padding: 2rem 0;
+
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  h1 {
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+  }
+
+  .last-update {
+    color: #666;
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+
+  section {
+    margin-bottom: 2rem;
+
+    h2 {
+      color: #444;
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5rem;
+    }
+
+    h3 {
+      color: #555;
+      margin-top: 1.2rem;
+      margin-bottom: 0.8rem;
+      font-size: 1.2rem;
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+
+      li {
+        margin-bottom: 0.5rem;
+        line-height: 1.5;
+      }
+    }
+  }
+}
+
+@media print {
+  .termini-servizio-page {
+    padding: 0;
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+    }
+  }
+}

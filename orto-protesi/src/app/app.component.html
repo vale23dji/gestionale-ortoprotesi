@@ -1,2 +1,14 @@
-<app-navbar></app-navbar>
-<router-outlet />
+<div class="app-container">
+  <app-navbar></app-navbar>
+  <div class="content-wrapper">
+    <router-outlet />
+  </div>
+  <app-footer></app-footer>
+</div>
+
+<!-- Privacy Consent Popup -->
+<app-privacy-consent-popup
+  [mostraPopup]="mostraPrivacyPopup"
+  [consentoChiusura]="false"
+  (chiusoPopup)="onPrivacyPopupChiuso($event)">
+</app-privacy-consent-popup>

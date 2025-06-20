@@ -1,0 +1,78 @@
+<!-- filepath: /Users/valiaky/Desktop/PROGETTO X ALAN/orto-protesi/src/app/components/gdpr-rights/gdpr-rights.component.html -->
+<div class="gdpr-container">
+  <h2>Gestione Privacy e Diritti GDPR</h2>
+
+  <div class="card">
+    <h3>I tuoi consensi</h3>
+    <div *ngIf="currentConsents">
+      <div class="consent-item" *ngFor="let consent of displayedConsents">
+        <div class="consent-name">{{ consent.label }}</div>
+        <div class="consent-value" [class.granted]="consent.value" [class.revoked]="!consent.value">
+          {{ consent.value ? 'Concesso' : 'Revocato' }}
+        </div>
+        <button
+          *ngIf="consent.canToggle"
+          (click)="toggleConsent(consent.key)"
+          class="btn-toggle"
+          [class.btn-revoke]="consent.value"
+          [class.btn-grant]="!consent.value">
+          {{ consent.value ? 'Revoca' : 'Concedi' }}
+        </button>
+        <div *ngIf="!consent.canToggle && consent.value" class="mandatory-note">
+          Obbligatorio
+        </div>
+      </div>
+
+      <div class="consent-meta">
+        <p>Data ultimo aggiornamento: {{ formatDate(currentConsents?.dataAccettazione) }}</p>
+        <p>Versione policy: {{ currentConsents?.versionePolicy || 'N/A' }}</p>
+      </div>
+    </div>
+    <div *ngIf="!currentConsents" class="no-data">
+      Nessun consenso registrato.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Esportazione dati (Art. 15 GDPR)</h3>
+    <p>Puoi richiedere una copia di tutti i tuoi dati personali in un formato leggibile.</p>
+    <button
+      (click)="exportData()"
+      [disabled]="exportLoading || !userId"
+      class="btn-primary">
+      {{ exportLoading ? 'Esportazione in corso...' : 'Esporta i miei dati' }}
+    </button>
+  </div>
+
+  <div class="card">
+    <h3>Richiesta cancellazione (Art. 17 GDPR)</h3>
+    <p>Puoi richiedere la cancellazione dei tuoi dati personali dal nostro sistema.</p>
+    <div class="form-group">
+      <label for="deletionReason">Motivo della richiesta (opzionale):</label>
+      <textarea
+        id="deletionReason"
+        [(ngModel)]="deletionReason"
+        placeholder="Specifica il motivo della richiesta di cancellazione"
+        rows="3">
+      </textarea>
+    </div>
+
+    <button
+      (click)="openDeletionConfirmation()"
+      [disabled]="deletionRequestLoading || !userId"
+      class="btn-danger">
+      {{ deletionRequestLoading ? 'Invio richiesta...' : 'Richiedi cancellazione' }}
+    </button>
+
+    <div *ngIf="showDeletionConfirm" class="confirmation-dialog">
+      <div class="confirmation-content">
+        <h4>Conferma cancellazione</h4>
+        <p class="warning">Questa azione non è reversibile. Tutti i tuoi dati verranno rimossi dal sistema.</p>
+        <div class="confirmation-actions">
+          <button (click)="cancelDeletion()" class="btn-cancel">Annulla</button>
+          <button (click)="confirmDeletion()" class="btn-confirm">Conferma cancellazione</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

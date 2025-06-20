@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
-import { NuovaLavorazioneComponent } from './pages/nuova-lavorazione.component';
 import { RoleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
@@ -83,6 +82,22 @@ export const routes: Routes = [
     canActivate: [() => RoleGuard(['admin', 'medico'])],
   },
 
+  //Rotte informative e privacy (accessibili a tutti)
+  {
+    path: 'privacy',
+    loadComponent: () => import('./pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent)
+  },
+  {
+    path: 'termini',
+    loadComponent: () => import('./pages/termini-servizio/termini-servizio.component').then(m => m.TerminiServizioComponent)
+  },
+  {
+    path: 'gdpr',
+    loadComponent: () => import('./pages/gdpr-info/gdpr-info.component').then(m => m.GdprInfoComponent),
+    canActivate: [() => RoleGuard(['admin', 'medico'])] // Solo per admin e medico
+  },
+
+
   // Rotte speciali
   {
     path: 'accesso-negato',
@@ -91,5 +106,5 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: '/login',  // Reindirizza alla login invece che alla dashboard
-  }
+  },
 ];

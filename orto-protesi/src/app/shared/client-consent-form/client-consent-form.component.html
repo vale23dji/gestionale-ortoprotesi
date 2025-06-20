@@ -1,0 +1,62 @@
+<div class="consent-form">
+  <h3>Consenso Informato al Trattamento dei Dati</h3>
+
+  <div class="form-section">
+    <div class="form-group">
+      <label>Nome e Cognome del paziente:</label>
+      <p class="patient-name">{{ pazienteNome }}</p>
+    </div>
+
+    <div class="form-group">
+      <label>Data di compilazione:</label>
+      <p>{{ dataOdierna | date:'dd/MM/yyyy' }}</p>
+    </div>
+  </div>
+
+  <div class="consent-items">
+    <div class="consent-item" *ngFor="let consenso of consensi">
+      <div class="form-check">
+        <input
+          type="checkbox"
+          [id]="'consenso-' + consenso.id"
+          [(ngModel)]="consenso.valore"
+          [disabled]="consenso.soloLettura || disabilitato">
+        <label [for]="'consenso-' + consenso.id" [class.required]="consenso.obbligatorio">
+          {{ consenso.descrizione }}
+        </label>
+      </div>
+      <div class="consent-details" *ngIf="consenso.dettagli">
+        {{ consenso.dettagli }}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <div class="signature-section" *ngIf="mostraFirma">
+      <div class="signature-box">
+        <label>Firma del paziente:</label>
+        <div class="signature-pad" #signaturePad></div>
+      </div>
+      <div class="signature-actions">
+        <button type="button" class="btn-clear" (click)="pulisciFirma()">Pulisci firma</button>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button
+        type="button"
+        class="btn-cancel"
+        *ngIf="mostiaAnnulla"
+        (click)="annulla()">
+        Annulla
+      </button>
+      <button
+        type="button"
+        class="btn-save"
+        [disabled]="!tuttiConsensiObbligatoriDati() || disabilitato"
+        (click)="salvaConsensi()">
+        Salva Consensi
+      </button>
+    </div>
+  </div>
+</div>

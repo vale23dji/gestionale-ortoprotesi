@@ -1,0 +1,106 @@
+<div class="privacy-overlay" *ngIf="mostraPopup">
+  <div class="privacy-popup">
+    <div class="privacy-header">
+      <h2>Informativa sulla Privacy e Consensi</h2>
+      <button class="close-btn" *ngIf="consentoChiusura" (click)="chiudi()">
+        <span>×</span>
+      </button>
+    </div>
+
+    <div class="privacy-content">
+      <div class="privacy-tabs">
+        <button
+          *ngFor="let tab of tabs"
+          [class.active]="tabAttivo === tab.id"
+          (click)="cambiaTab(tab.id)">
+          {{tab.label}}
+        </button>
+      </div>
+
+      <div class="tab-content">
+        <!-- Tab Privacy Policy -->
+        <div *ngIf="tabAttivo === 'privacy'" class="tab-pane">
+          <h3>Informativa sulla Privacy</h3>
+          <div class="scrollable-content">
+            <p>Ai sensi dell'art. 13 del Regolamento UE 2016/679 (GDPR), la informiamo che i suoi dati personali verranno trattati secondo i principi di liceità, correttezza e trasparenza.</p>
+            <p>I dati saranno raccolti per finalità di gestione del rapporto sanitario tra lei e lo Studio Dentistico e per adempiere agli obblighi legali connessi.</p>
+            <p>I suoi dati saranno conservati per il tempo necessario all'erogazione dei servizi richiesti e per adempiere agli obblighi di legge.</p>
+            <p>Ha diritto di accesso, rettifica, cancellazione, limitazione, portabilità e opposizione al trattamento dei suoi dati.</p>
+          </div>
+        </div>
+
+        <!-- Tab Cookie Policy -->
+        <div *ngIf="tabAttivo === 'cookie'" class="tab-pane">
+          <h3>Informativa sui Cookie</h3>
+          <div class="scrollable-content">
+            <p>Il nostro sito utilizza cookie tecnici necessari al funzionamento del sito.</p>
+            <p>Utilizziamo anche cookie analitici per comprendere come gli utenti utilizzano il nostro sito e cookie di terze parti per migliorare l'esperienza utente.</p>
+            <p>Lei può in qualsiasi momento modificare o revocare il suo consenso dalla Dichiarazione dei cookie sul nostro sito web.</p>
+          </div>
+        </div>
+
+        <!-- Tab Termini di Servizio -->
+        <div *ngIf="tabAttivo === 'termini'" class="tab-pane">
+          <h3>Termini di Servizio</h3>
+          <div class="scrollable-content">
+            <p>Utilizzando il nostro gestionale, accetta di rispettare i seguenti termini e condizioni.</p>
+            <p>Il servizio è fornito "così com'è" senza garanzie di alcun tipo.</p>
+            <p>L'utente si impegna a mantenere riservate le proprie credenziali di accesso.</p>
+            <p>Lo Studio si riserva il diritto di modificare o interrompere il servizio in qualsiasi momento.</p>
+          </div>
+        </div>
+
+        <!-- Tab GDPR -->
+        <div *ngIf="tabAttivo === 'gdpr'" class="tab-pane">
+          <h3>Trattamento dati GDPR</h3>
+          <div class="scrollable-content">
+            <p>In conformità con il Regolamento Generale sulla Protezione dei Dati (GDPR), informiamo che:</p>
+            <p>Il titolare del trattamento è lo Studio Dentistico [...], contattabile all'indirizzo [...]</p>
+            <p>I suoi dati sanitari saranno trattati esclusivamente per finalità di diagnosi e cura.</p>
+            <p>I suoi dati potranno essere comunicati a terzi solo se necessario per le finalità previste o per obblighi di legge.</p>
+            <p>Ha diritto di richiedere l'accesso, la rettifica, la cancellazione o la limitazione del trattamento dei suoi dati.</p>
+          </div>
+        </div>
+
+        <!-- Tab Marketing -->
+        <div *ngIf="tabAttivo === 'marketing'" class="tab-pane">
+          <h3>Consenso Marketing</h3>
+          <div class="scrollable-content">
+            <p>Con il suo consenso, potremmo utilizzare i suoi dati di contatto per:</p>
+            <p>- Invio di newsletter e comunicazioni su servizi e promozioni dello studio</p>
+            <p>- Inviti a eventi e webinar informativi sulla salute dentale</p>
+            <p>- Ricordarle appuntamenti di controllo periodici</p>
+            <p>Questo consenso è facoltativo e potrà essere revocato in qualsiasi momento.</p>
+          </div>
+        </div>
+
+        <!-- Per ogni tab con checkbox -->
+        <div class="consent-check">
+          <input type="checkbox" id="privacy-consent" [checked]="consensi.privacy" (change)="toggleConsent('privacy')">
+          <label for="privacy-consent">Ho letto e accetto l'informativa sulla privacy <span class="required">*</span></label>
+        </div>
+
+        <div class="consent-check">
+          <input type="checkbox" id="terms-consent" [checked]="consensi.termini" (change)="toggleConsent('termini')">
+          <label for="terms-consent">Ho letto e accetto i termini di servizio <span class="required">*</span></label>
+        </div>
+
+        <div class="consent-check">
+          <input type="checkbox" id="gdpr-consent" [checked]="consensi.gdpr" (change)="toggleConsent('gdpr')">
+          <label for="gdpr-consent">Acconsento al trattamento dei miei dati personali anche sanitari <span class="required">*</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="privacy-footer">
+      <div class="required-note">
+        <span class="required">*</span> Campi obbligatori
+      </div>
+      <div class="action-buttons">
+        <button class="btn-secondary" *ngIf="consentoChiusura" (click)="chiudi()">Chiudi</button>
+        <!-- Verifica questo button e il suo binding -->
+        <button class="btn-primary" [disabled]="!consentoTuttiObbligatori()" (click)="salvaEChiudi()">Accetta</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -12,6 +12,8 @@ public class DataContext : DbContext
     public DbSet<Lavorazione>     Lavorazioni         => Set<Lavorazione>();
     public DbSet<EmailVerification> EmailVerifications => Set<EmailVerification>();
     public DbSet<InvitoMedico>    InvitiMedici        => Set<InvitoMedico>();
+    public DbSet<PrivacyConsent>  PrivacyConsents     => Set<PrivacyConsent>();
+    public DbSet<DataDeletionRequest> DataDeletionRequests => Set<DataDeletionRequest>();
     protected override void OnModelCreating(ModelBuilder mb)
   {
     base.OnModelCreating(mb);

@@ -75,3 +75,8 @@ For more information on using the Angular CLI, including detailed command refere
 
 ## 
 - l' auth guard serve per chi non è registrato viene reindirizzato al login 
+
+
+## 
+- Comando per fare il push sia in gitlab che in github --> ./pushall.sh
+

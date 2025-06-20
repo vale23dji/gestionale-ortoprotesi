@@ -1,0 +1,137 @@
+<div class="privacy-admin-container">
+  <h1>Gestione Privacy e GDPR</h1>
+  
+  <div class="card">
+    <h2>Richieste di Cancellazione Dati</h2>
+    
+    <div class="filters">
+      <div class="filter-row">
+        <div class="filter-group">
+          <label for="statusFilter">Stato:</label>
+          <select id="statusFilter" [(ngModel)]="filterOptions.status">
+            <option value="all">Tutti gli stati</option>
+            <option value="In attesa">In attesa</option>
+            <option value="Completata">Completata</option>
+            <option value="Rifiutata">Rifiutata</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="dateFromFilter">Data da:</label>
+          <input type="date" id="dateFromFilter" [(ngModel)]="filterOptions.dateFrom">
+        </div>
+        
+        <div class="filter-group">
+          <label for="dateToFilter">Data a:</label>
+          <input type="date" id="dateToFilter" [(ngModel)]="filterOptions.dateTo">
+        </div>
+        
+        <div class="filter-actions">
+          <button (click)="applyFilters()" class="btn-primary">Applica filtri</button>
+          <button (click)="resetFilters()" class="btn-secondary">Reset</button>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="loading.deletions" class="loading">
+      <p>Caricamento richieste...</p>
+    </div>
+    
+    <div *ngIf="!loading.deletions && deletionRequests.length === 0" class="no-data">
+      <p>Nessuna richiesta di cancellazione trovata</p>
+    </div>
+    
+    <table *ngIf="!loading.deletions && deletionRequests.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Utente</th>
+          <th>Data richiesta</th>
+          <th>Motivazione</th>
+          <th>Stato</th>
+          <th>Note</th>
+          <th>Azioni</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let request of deletionRequests">
+          <td>{{ request.id }}</td>
+          <td>{{ request.utente.nome }} {{ request.utente.cognome }} (ID: {{ request.utenteId }})</td>
+          <td>{{ request.dataRichiesta | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ request.motivazione || 'Non specificata' }}</td>
+          <td>
+            <span class="badge" [ngClass]="'badge-' + request.statoRichiesta.toLowerCase().replace(' ', '-')">
+              {{ request.statoRichiesta }}
+            </span>
+          </td>
+          <td>{{ request.noteAmministrative || '-' }}</td>
+          <td>
+            <div class="action-buttons">
+              <button *ngIf="request.statoRichiesta === 'In attesa'" 
+                      (click)="executeDataDeletion(request.utenteId, request.id)" 
+                      class="btn-danger">
+                Elimina dati
+              </button>
+              <button *ngIf="request.statoRichiesta === 'In attesa'" 
+                      (click)="updateDeletionRequestStatus(request.id, 'Rifiutata', 'Richiesta rifiutata per incompletezza dati')" 
+                      class="btn-secondary">
+                Rifiuta
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="card">
+    <h2>Consensi Privacy Recenti</h2>
+    
+    <div *ngIf="loading.consents" class="loading">
+      <p>Caricamento consensi...</p>
+    </div>
+    
+    <div *ngIf="!loading.consents && userConsents.length === 0" class="no-data">
+      <p>Nessun consenso recente trovato</p>
+    </div>
+    
+    <table *ngIf="!loading.consents && userConsents.length > 0">
+      <thead>
+        <tr>
+          <th>Utente</th>
+          <th>Data</th>
+          <th>IP</th>
+          <th>Versione Policy</th>
+          <th>Consensi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let consent of userConsents">
+          <td>{{ consent.utente.nome }} {{ consent.utente.cognome }}</td>
+          <td>{{ consent.dataAccettazione | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ consent.ipAddress }}</td>
+          <td>{{ consent.versionePolicy }}</td>
+          <td>
+            <div class="consent-badges">
+              <span class="consent-badge" [ngClass]="{'consent-granted': consent.privacy, 'consent-rejected': !consent.privacy}">
+                Privacy: {{ consent.privacy ? '✓' : '✗' }}
+              </span>
+              <span class="consent-badge" [ngClass]="{'consent-granted': consent.termini, 'consent-rejected': !consent.termini}">
+                Termini: {{ consent.termini ? '✓' : '✗' }}
+              </span>
+              <span class="consent-badge" [ngClass]="{'consent-granted': consent.gdpr, 'consent-rejected': !consent.gdpr}">
+                GDPR: {{ consent.gdpr ? '✓' : '✗' }}
+              </span>
+              <span class="consent-badge" [ngClass]="{'consent-granted': consent.marketing, 'consent-rejected': !consent.marketing}">
+                Marketing: {{ consent.marketing ? '✓' : '✗' }}
+              </span>
+              <span class="consent-badge" [ngClass]="{'consent-granted': consent.cookie, 'consent-rejected': !consent.cookie}">
+                Cookie: {{ consent.cookie ? '✓' : '✗' }}
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

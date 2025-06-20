@@ -8,6 +8,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { importProvidersFrom } from '@angular/core';
 import { authInterceptor } from './Interceptors/auth.interceptors';
 import { unauthorizedInterceptor } from './Interceptors/unauthorized.interceptors';
+import { CookieService } from './services/Cookie.service';
 
 
 export const appConfig: ApplicationConfig = {
@@ -22,6 +23,7 @@ export const appConfig: ApplicationConfig = {
         preventDuplicates: true
       })
     ),
+    CookieService,
     provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch(),withInterceptors([authInterceptor, unauthorizedInterceptor])),
   ]
