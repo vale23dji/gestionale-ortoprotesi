@@ -71,12 +71,11 @@ export class StlViewerComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private fileService: FileService) {}
 
   ngOnInit(): void {
-    console.log('StlViewer inizializzato con URL:', this.fileUrl);
+
     this.initThreeJs();
 
     if (this.fileUrl) {
       const url = this.fileService.getStlViewerUrl(this.fileUrl);
-      console.log('URL elaborato per StlViewer:', url);
       this.loadStlModel(url);
     } else {
       console.warn('StlViewer: nessun URL fornito');
@@ -226,7 +225,6 @@ export class StlViewerComponent implements OnInit, OnChanges, OnDestroy {
 
       // Callback di errore
       (error) => {
-        console.error('Errore caricamento STL:', error);
         this.error = 'Errore nel caricamento del file STL';
         this.isLoading = false;
       }

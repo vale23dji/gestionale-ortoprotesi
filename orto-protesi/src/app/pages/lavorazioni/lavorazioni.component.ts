@@ -96,8 +96,6 @@ export class LavorazioniComponent implements OnInit {
           const dateB = b.dataCreazione ? new Date(b.dataCreazione).getTime() : 0;
           return dateB - dateA; // Ordine discendente
         });
-
-        console.log(`Caricate ${this.lavorazioni.length} lavorazioni`);
       },
       error: err => {
         console.error('Errore loading', err);
@@ -149,8 +147,6 @@ export class LavorazioniComponent implements OnInit {
           const dateB = b.dataCreazione ? new Date(b.dataCreazione).getTime() : 0;
           return dateB - dateA; // Ordine discendente
         });
-
-        console.log(`Caricate ${this.lavorazioni.length} lavorazioni per l'utente`);
       },
       error: (err) => {
         console.error('Errore nel caricamento delle lavorazioni per utente: ', err);
@@ -188,13 +184,8 @@ export class LavorazioniComponent implements OnInit {
     }
 
     if (!confirm('Confermi l\'eliminazione della lavorazione?')) return;
-
-    console.log(`Tentativo di eliminazione lavorazione ID: ${id}`);
-
     this.apiService.deleteLavorazione(id).subscribe({
       next: () => {
-        console.log(`Lavorazione ${id} eliminata con successo`);
-
         // Aggiorniamo entrambe le liste
         this.lavorazioni = this.lavorazioni.filter(l => l.id !== id);
         this.lavorazioniClienteSelezionato = this.lavorazioniClienteSelezionato.filter(l => l.id !== id);
@@ -210,8 +201,6 @@ export class LavorazioniComponent implements OnInit {
         this.errorMessage = null;
       },
       error: (err) => {
-        console.error('Errore durante eliminazione:', err);
-
         // Messaggio di errore più descrittivo
         let messaggio = "Errore nell'eliminazione della lavorazione.";
 

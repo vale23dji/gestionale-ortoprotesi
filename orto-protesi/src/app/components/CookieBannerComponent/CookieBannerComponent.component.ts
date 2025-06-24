@@ -289,7 +289,7 @@ export class CookieBannerComponent implements OnInit {
     try {
       // Utilizzo di firstValueFrom per ottenere l'ultimo valore dell'Observable in modo type-safe
       const consentsResponse = await firstValueFrom(this.privacyService.consensi$);
-      
+
       currentConsents = consentsResponse || {
         privacy: true,
         termini: true,
@@ -299,7 +299,7 @@ export class CookieBannerComponent implements OnInit {
       };
     } catch (error) {
       console.error('Errore nel recupero dei consensi esistenti:', error);
-      
+
       // Fallback in caso di errore - consensi obbligatori attivati, opzionali disattivati
       currentConsents = {
         privacy: true,
@@ -331,7 +331,7 @@ export class CookieBannerComponent implements OnInit {
       next: () => {
         this.showBanner = false;
         this.setCookies();
-        
+
         // Rimuovi il backup dopo il successo
         try {
           localStorage.removeItem('privacy_consents_backup');
@@ -344,7 +344,7 @@ export class CookieBannerComponent implements OnInit {
         // Anche in caso di errore, nascondiamo il banner ma pianifichiamo un retry
         this.showBanner = false;
         this.setCookies();
-        
+
         // Pianifica un tentativo di reinvio in background
         setTimeout(() => {
           this.retryConsentSubmission(updatedConsents);
@@ -358,8 +358,8 @@ export class CookieBannerComponent implements OnInit {
       console.error('Tutti i tentativi di invio consensi falliti');
       return;
     }
-    
-    console.log(`Tentativo di reinvio consensi (${retries} tentativi rimanenti)`);
+
+    //console.log(`Tentativo di reinvio consensi (${retries} tentativi rimanenti)`);
     this.privacyService.accettaConsensi(consents).subscribe({
       next: () => {
         console.log('Consensi inviati con successo nel tentativo di retry');

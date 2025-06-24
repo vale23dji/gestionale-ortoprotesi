@@ -39,11 +39,6 @@ public class AuthController : ControllerBase
 
         var user = _context.Utenti.FirstOrDefault(u =>
             u.Email.ToLower() == request.Email.ToLower());
-
-            Console.WriteLine("Input Email: " + request.Email);
-            Console.WriteLine("Input Password: " + request.Password);
-            Console.WriteLine("Hash salvato nel DB: " + user.PasswordHash);
-
             if (user == null)
                return Unauthorized("Credenziali non valide");
 
@@ -76,18 +71,12 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDTO request)
     {
-        Console.WriteLine("== CHIAMATA REGISTER ==");
-        Console.WriteLine($"Email: {request.Email}");
-        Console.WriteLine($"Nome: {request.Nome}");
-        Console.WriteLine($"Cognome: {request.Cognome}");
-        Console.WriteLine($"Password: {request.Password}");
-
       try
       {
         var existingUser = _context.Utenti.FirstOrDefault(u => u.Email == request.Email);
         if (existingUser != null)
         {
-            Console.WriteLine($"Utente già registrato con email: {request.Email}");
+            //Console.WriteLine($"Utente già registrato con email: {request.Email}");
             return BadRequest("Utente già registrato");
         }
 
@@ -250,11 +239,6 @@ public class AuthController : ControllerBase
     [HttpPost("cambia-password")]
 public async Task<IActionResult> CambiaPassword([FromBody] ChangePasswordDTO model)
 {
-    Console.WriteLine("== CHIAMATA CAMBIA‐PASSWORD ==");
-    Console.WriteLine($"Email in ingresso: {model?.Email}");
-    Console.WriteLine($"VecchiaPassword in ingresso: {model?.VecchiaPassword}");
-    Console.WriteLine($"NuovaPassword in ingresso: {model?.NuovaPassword}");
-
     if (model == null)
         return BadRequest("Payload non valido");
 

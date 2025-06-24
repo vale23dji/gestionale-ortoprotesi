@@ -319,12 +319,7 @@ namespace OrtoProtesiApi.Controllers
                     CodiceFiscalePaziente = l.CodiceFiscalePaziente
                 })
                 .ToListAsync();
-
-                Console.WriteLine($"[MieLavorazioni] Utente: {userId}");
                 var count = await _context.Lavorazioni.CountAsync(l => l.CreatoDaUtenteId == userId);
-                Console.WriteLine($"[MieLavorazioni] Lavorazioni trovate: {count}");
-
-
             // Aggiungi percorsi dei file
             foreach (var dto in list)
             {
@@ -402,7 +397,7 @@ namespace OrtoProtesiApi.Controllers
         {
             var filePath = Path.Combine(_env.WebRootPath ?? "wwwroot", "uploads", id.ToString(), filename);
 
-            Console.WriteLine($"Richiesta download STL: {filePath}");
+            //Console.WriteLine($"Richiesta download STL: {filePath}");
 
             if (!System.IO.File.Exists(filePath))
             {
@@ -428,11 +423,10 @@ namespace OrtoProtesiApi.Controllers
         {
             var filePath = Path.Combine(_env.WebRootPath ?? "wwwroot", "uploads", id.ToString(), filename);
 
-            Console.WriteLine($"Richiesta download immagine: {filePath}");
+            //Console.WriteLine($"Richiesta download immagine: {filePath}");
 
             if (!System.IO.File.Exists(filePath))
             {
-                Console.WriteLine($"Immagine non trovata: {filePath}");
                 return NotFound($"Immagine non trovata: {filePath}");
             }
 
@@ -459,9 +453,6 @@ namespace OrtoProtesiApi.Controllers
                     contentType = "application/octet-stream";
                     break;
             }
-
-            Console.WriteLine($"Content type determinato: {contentType}");
-
             return PhysicalFile(filePath, contentType);
         }
 

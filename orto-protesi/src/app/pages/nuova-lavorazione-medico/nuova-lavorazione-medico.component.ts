@@ -184,9 +184,7 @@ export class NuovaLavorazioneMedicoComponent implements OnInit {
         this.router.navigate(['/mie-lavorazioni']);
       },
       error: (err) => {
-        console.error('Errore durante upload:', err);
-        console.log('Status:', err.status);
-        console.log('Dettaglio risposta:', err.error);
+        
         this.loading = false;
 
         // Mostra il messaggio di errore

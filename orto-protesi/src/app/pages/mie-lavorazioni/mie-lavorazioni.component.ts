@@ -101,8 +101,6 @@ export class MieLavorazioniComponent implements OnInit {
           const dateB = b.dataCreazione ? new Date(b.dataCreazione).getTime() : 0;
           return dateB - dateA; // Ordine discendente
         });
-
-        console.log(`Ricevute ${this.lavorazioni.length} lavorazioni`);
       },
       error: error => {
         console.error('Errore caricamento lavorazioni:', error);

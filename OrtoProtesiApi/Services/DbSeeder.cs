@@ -30,7 +30,6 @@ public static class DbSeeder
         db.SaveChanges();
 
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($">>> Admin seed creato – alan.ahmad@gmail.com / Orto!25?");
         Console.ResetColor();
     }
 }

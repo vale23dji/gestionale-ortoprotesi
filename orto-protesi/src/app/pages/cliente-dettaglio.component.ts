@@ -76,7 +76,6 @@ export class ClienteDettaglioComponent implements OnInit {
               tipiLavorazioneStringEdit: lavorazione.tipiLavorazione.join(' > ')
             };
             this.lavorazioni = [lavorazioneConEdit];
-            console.log('Lavorazione specifica caricata:', this.lavorazioni);
           }
         },
         error: (err) => {
@@ -107,8 +106,6 @@ export class ClienteDettaglioComponent implements OnInit {
           const dateB = b.dataCreazione ? new Date(b.dataCreazione).getTime() : 0;
           return dateB - dateA; // Ordine discendente
         });
-
-        console.log('Tutte le lavorazioni caricate:', this.lavorazioni);
       },
       error: (err) => {
         console.error('Errore nel caricamento delle lavorazioni:', err);
@@ -126,7 +123,6 @@ export class ClienteDettaglioComponent implements OnInit {
   visualizzaStl(percorso: string): void {
     // Usa il fileService invece di apiService
     this.modalStlUrl = this.fileService.getStlViewerUrl(percorso);
-    console.log('URL per visualizzazione STL:', this.modalStlUrl);
   }
 
   // Aggiungi questa funzione per chiudere la modale STL
