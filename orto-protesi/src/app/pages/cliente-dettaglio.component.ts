@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { StlViewerComponent } from '../components/stl-viewer.component';
 import { FormatDatetimePipe } from '../pipes/format-datetime.pipe';
 import { RouterModule } from '@angular/router';
+import { SecureLoggerService } from '../services/SecureLogger.service'; // <-- AGGIUNGERE
 
 
 @Component({
@@ -20,7 +21,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './cliente-dettaglio.component.html',
   styleUrls: ['./cliente-dettaglio.component.scss']
 })
-export class ClienteDettaglioComponent implements OnInit {
+export class ClienteDettaglioComponent implements OnInit { 
   cliente: Cliente | null = null;
   lavorazioni: Lavorazione[] = [];
   editModes: Map<number, boolean> = new Map();
@@ -39,7 +40,7 @@ export class ClienteDettaglioComponent implements OnInit {
     public fileService: FileService, // Aggiungi il FileService
     private router: Router,
     private sharedService: SharedService,
-
+    private logger: SecureLoggerService // <-- AGGIUNGERE
   ) {}
 
   ngOnInit(): void {
@@ -123,6 +124,7 @@ export class ClienteDettaglioComponent implements OnInit {
   visualizzaStl(percorso: string): void {
     // Usa il fileService invece di apiService
     this.modalStlUrl = this.fileService.getStlViewerUrl(percorso);
+    this.logger.debug('ClienteDettaglioComponent', 'URL per visualizzazione STL generato');
   }
 
   // Aggiungi questa funzione per chiudere la modale STL
@@ -279,6 +281,6 @@ export class ClienteDettaglioComponent implements OnInit {
 
   apriImmagine(percorso: string): void {
     this.modalImageUrl = this.fileService.getImageViewerUrl(percorso);
-    console.log('URL per visualizzazione immagine:', this.modalImageUrl);
+    this.logger.debug('ClienteDettaglioComponent', 'Lavorazione specifica caricata');
   }
 }

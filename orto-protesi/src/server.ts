@@ -64,3 +64,29 @@ if (isMainModule(import.meta.url)) {
  * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
  */
 export const reqHandler = createNodeRequestHandler(app);
+
+/**
+ * Function to define prerender routes
+ */
+export function getPrerenderRoutes() {
+  // Return only the routes without parameters that you want to prerender
+  return [
+    '/',
+    '/login',
+    '/register',
+    '/privacy',
+    '/termini',
+    // other static routes...
+  ];
+}
+
+/**
+ * If you need to completely disable prerendering for specific routes
+ */
+export function hasRoute(route: string): boolean {
+  // Explicitly exclude routes with parameters
+  if (route.includes('/clienti/')) {
+    return false;
+  }
+  return true;
+}

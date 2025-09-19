@@ -2,11 +2,12 @@ services:
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: ortoprotesi-sql
+    env_file:
+      - .env.prod
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=${SA_PASSWORD}
-    ports:
-      - "1433:1433"            
+    # NIENTE porta esposta in prod; usa 'exec' per sqlcmd
     volumes:
       - mssql_data:/var/opt/mssql
     networks:
@@ -21,19 +22,16 @@ services:
 
   api:
     build:
-      context: .
+      context: ../..                   # root repo
       dockerfile: OrtoProtesiApi/Dockerfile
     container_name: ortoprotesi-api
+    env_file:
+      - .env.prod
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      ConnectionStrings__DefaultConnection: "Server=db,1433;Database=ortoprotesi;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;Encrypt=True;"
+      ConnectionStrings__DefaultConnection: "Server=db,1433;Database=ortoprotesi;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;Encrypt=False;"
       Jwt__Key: ${JWT_KEY}
-      Jwt__Issuer: ortoprotesi-api
-      Jwt__Audience: ortoprotesi-client
-
-      AdminSeed__Email: ${ADMIN_EMAIL}
-      AdminSeed__Password: ${ADMIN_PASSWORD}
-      ASPNETCORE_URLS: http://+:5000
+      ASPNETCORE_URLS: "http://+:5000"
     depends_on:
       db:
         condition: service_healthy
@@ -42,40 +40,47 @@ services:
       - dataprotection_keys:/root/.aspnet/DataProtection-Keys
     networks:
       - ortoprotesi-network
-    ports:
-      - "5000:5000"
+    # NIENTE porta esposta in prod (sarà dietro al reverse proxy)
     restart: always
 
   frontend:
     build:
-      context: ./orto-protesi
-      dockerfile: Dockerfile
+      context: ../..                   # root repo (necessario per i COPY del Dockerfile)
+      dockerfile: ./orto-protesi/Dockerfile
     container_name: ortoprotesi-frontend
     networks:
       - ortoprotesi-network
     depends_on:
       - api
+    # NIENTE porta esposta: il reverse proxy fa da entrypoint
     restart: always
 
   nginx:
     image: nginx:alpine
     container_name: ortoprotesi-nginx
+    env_file:
+      - .env.prod
     depends_on:
       - api
       - frontend
-    networks:
-      - ortoprotesi-network
     ports:
       - "80:80"
-      - "5233:80"
+      - "443:443"                        # <— aggiunto
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./conf.d:/etc/nginx/conf.d:ro
+      - certbot-www:/var/www/certbot     # <— webroot ACME
+      - letsencrypt:/etc/letsencrypt     # <— cert e chiavi
+    networks:
+      - ortoprotesi-network
     restart: always
-
-networks:
-  ortoprotesi-network:
 
 volumes:
   mssql_data:
   uploads:
   dataprotection_keys:
+  certbot-www:                           # <— aggiunto
+  letsencrypt:                           # <— aggiunto
+
+networks:
+  ortoprotesi-network:
+

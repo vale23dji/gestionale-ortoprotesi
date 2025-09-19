@@ -124,50 +124,72 @@ namespace OrtoProtesiApi.Controllers
                 
                 // 2. Salva i dati esportati
                 var exportJson = System.Text.Json.JsonSerializer.Serialize(exportData);
-                var exportPath = System.IO.Path.Combine(
-                    System.IO.Path.GetTempPath(), 
-                    $"user_{userId}_export_{DateTime.UtcNow:yyyyMMdd_HHmmss}.json"
-                );
-                System.IO.File.WriteAllText(exportPath, exportJson);
-                
-                _logger.LogInformation($"Dati utente {userId} esportati in {exportPath}");
-                
-                // 3. Elimina i dati dell'utente
-                var consents = await _context.PrivacyConsents.Where(c => c.UtenteId == userId).ToListAsync();
-                _context.PrivacyConsents.RemoveRange(consents);
-                
-                var deletionRequests = await _context.DataDeletionRequests.Where(d => d.UtenteId == userId).ToListAsync();
-                foreach (var req in deletionRequests)
+                try
                 {
-                    req.StatoRichiesta = "Completata";
-                    req.DataCompletamento = DateTime.UtcNow;
-                    req.NoteAmministrative = "Dati utente eliminati come richiesto";
-                }
-                
-                // Anonimizza le lavorazioni invece di cancellarle
-                var lavorazioni = await _context.Lavorazioni.Where(l => l.CreatoDaUtenteId == userId).ToListAsync();
-                foreach (var lavorazione in lavorazioni)
-                {
-                    // Aggiungi una nota che l'utente è stato anonimizzato
-                    lavorazione.SpecificheTecniche += "\n[Utente creatore anonimizzato]";
+                    // Usa un GUID per il nome file per maggiore sicurezza
+                    var tempFileName = $"user_{userId}_export_{Guid.NewGuid():N}.json";
+                    var exportPath = System.IO.Path.Combine(
+                        System.IO.Path.GetTempPath(), 
+                        tempFileName
+                    );
                     
-                    // Se hai bisogno di dissociare l'utente, potresti utilizzare un ID di sistema
-                    // o creare un utente "anonimo" per questo scopo
-                    // lavorazione.CreatoDaUtenteId = tuoUtenteAnonimoId;
+                    // Imposta permessi restrittivi sul file
+                    using (var fileStream = new FileStream(
+                        exportPath, 
+                        FileMode.Create,
+                        FileAccess.ReadWrite,
+                        FileShare.None)) // Nessuna condivisione del file
+                    {
+                        using (var writer = new StreamWriter(fileStream))
+                        {
+                            await writer.WriteAsync(exportJson);
+                        }
+                    }
+                    
+                    _logger.LogInformation($"Dati utente {userId} esportati in {exportPath}");
+                    
+                    // 3. Elimina i dati dell'utente
+                    var consents = await _context.PrivacyConsents.Where(c => c.UtenteId == userId).ToListAsync();
+                    _context.PrivacyConsents.RemoveRange(consents);
+                    
+                    var deletionRequests = await _context.DataDeletionRequests.Where(d => d.UtenteId == userId).ToListAsync();
+                    foreach (var req in deletionRequests)
+                    {
+                        req.StatoRichiesta = "Completata";
+                        req.DataCompletamento = DateTime.UtcNow;
+                        req.NoteAmministrative = "Dati utente eliminati come richiesto";
+                    }
+                    
+                    // Anonimizza le lavorazioni invece di cancellarle
+                    var lavorazioni = await _context.Lavorazioni.Where(l => l.CreatoDaUtenteId == userId).ToListAsync();
+                    foreach (var lavorazione in lavorazioni)
+                    {
+                        // Aggiungi una nota che l'utente è stato anonimizzato
+                        lavorazione.SpecificheTecniche += "\n[Utente creatore anonimizzato]";
+                        
+                        // Se hai bisogno di dissociare l'utente, potresti utilizzare un ID di sistema
+                        // o creare un utente "anonimo" per questo scopo
+                        // lavorazione.CreatoDaUtenteId = tuoUtenteAnonimoId;
+                    }
+                    
+                    // Anonimizza l'utente invece di eliminarlo completamente
+                    // CORREZIONE: usa i nomi corretti dei campi
+                    user.Nome = "Utente";
+                    user.Cognome = "Cancellato";
+                    user.Email = $"deleted_user_{userId}@anonymized.com";
+                    user.PasswordHash = "ACCOUNT_DELETED"; // Rendi la password inutilizzabile
+                    user.EmailVerificata = false;
+                    
+                    await _context.SaveChangesAsync();
+                    
+                    _logger.LogInformation($"Dati utente {userId} cancellati/anonimizzati con successo");
+                    return Ok(new { message = "Dati utente cancellati con successo" });
                 }
-                
-                // Anonimizza l'utente invece di eliminarlo completamente
-                // CORREZIONE: usa i nomi corretti dei campi
-                user.Nome = "Utente";
-                user.Cognome = "Cancellato";
-                user.Email = $"deleted_user_{userId}@anonymized.com";
-                user.PasswordHash = "ACCOUNT_DELETED"; // Rendi la password inutilizzabile
-                user.EmailVerificata = false;
-                
-                await _context.SaveChangesAsync();
-                
-                _logger.LogInformation($"Dati utente {userId} cancellati/anonimizzati con successo");
-                return Ok(new { message = "Dati utente cancellati con successo" });
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Errore nella gestione dell'esportazione dati per utente {UserId}", userId);
+                    return StatusCode(500, "Errore nella gestione dell'esportazione dati");
+                }
             }
             catch (Exception ex)
             {

@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.Extensions.Logging; 
+using System.Collections.Generic;
+using OrtoProtesiApi.Services;
 
 
 namespace OrtoProtesiApi.Controllers
@@ -18,11 +21,19 @@ namespace OrtoProtesiApi.Controllers
     {
         private readonly DataContext _context;
         private readonly IWebHostEnvironment _env;
+        private readonly ILogger<LavorazioniController> _logger; 
+        private readonly FileSecurityService _fileSecurityService;
 
-        public LavorazioniController(DataContext context, IWebHostEnvironment env)
+        public LavorazioniController(
+            DataContext context, 
+            IWebHostEnvironment env,
+            ILogger<LavorazioniController> logger,
+            FileSecurityService fileSecurityService) // <-- AGGIUNGERE QUESTO PARAMETRO
         {
             _context = context;
             _env = env;
+            _logger = logger;
+            _fileSecurityService = fileSecurityService;
         }
 
         // GET: api/lavorazioni
@@ -340,6 +351,8 @@ namespace OrtoProtesiApi.Controllers
                 }
             }
 
+            _logger.LogDebug("MieLavorazioni - Utente: {UserId}, Lavorazioni trovate: {Count}", userId, count);
+
             return Ok(list);
         }
 
@@ -418,16 +431,23 @@ namespace OrtoProtesiApi.Controllers
         }
 
         [HttpGet("download-image/{id}/{filename}")]
-        [AllowAnonymous]
         public IActionResult DownloadImage(int id, string filename)
         {
+            // Controllo di sicurezza contro path traversal
+            if (filename.Contains("..") || filename.Contains("/") || filename.Contains("\\"))
+            {
+                _logger.LogWarning("Tentativo di path traversal rilevato: {Filename}", filename);
+                return BadRequest("Nome file non valido");
+            }
+            
             var filePath = Path.Combine(_env.WebRootPath ?? "wwwroot", "uploads", id.ToString(), filename);
 
-            //Console.WriteLine($"Richiesta download immagine: {filePath}");
+            _logger.LogDebug("Richiesta download immagine per lavorazione {Id}", id);
 
             if (!System.IO.File.Exists(filePath))
             {
-                return NotFound($"Immagine non trovata: {filePath}");
+                _logger.LogWarning("File non trovato: {Id}/{Filename}", id, filename);
+                return NotFound("Immagine non trovata"); // <-- MODIFICATO: non espone il percorso completo
             }
 
             // Determina il content type in base all'estensione

@@ -4,10 +4,13 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration=production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:orto-protesi": "node dist/orto-protesi/server/server.mjs"
+    "serve:ssr:orto-protesi": "node dist/orto-protesi/server/server.mjs",
+    "postbuild": "cp -f public/_redirects dist/orto-protesi/_redirects || true",
+    "deploy:preview": "npm run build && wrangler pages deploy dist/orto-protesi --project-name ortoprotesi --branch preview --commit-dirty=true",
+    "deploy:prod": "npm run build && wrangler pages deploy dist/orto-protesi --project-name ortoprotesi --branch production --commit-dirty=true"
   },
   "private": true,
   "dependencies": {

@@ -54,8 +54,9 @@ export const routes: Routes = [
   },
   {
     path: 'clienti/:id',
-    loadComponent: () => import('./pages/cliente-dettaglio.component').then(m => m.ClienteDettaglioComponent),
-    canActivate: [() => RoleGuard(['admin'])],
+    loadComponent: () => import('./pages/cliente-dettaglio.component').then(c => c.ClienteDettaglioComponent),
+    // Rimuovi la proprietà renderMode e usa una configurazione supportata
+    data: { prerender: false }  // Uso di data per segnalare che questa rotta non va prerenderizzata
   },
   {
     path: 'invita-medico-list',

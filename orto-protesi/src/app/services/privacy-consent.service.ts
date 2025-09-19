@@ -28,7 +28,7 @@ export class PrivacyConsentService {
   private storageKey = 'privacy_consents';
   private consensoSubject = new BehaviorSubject<ConsensoPrivacy | null>(null);
   readonly currentPolicyVersion = "1.0"; // Definisci la versione attuale delle policy
-  
+
   constructor(
     private http: HttpClient,
     private storageService: StorageService
@@ -80,10 +80,10 @@ export class PrivacyConsentService {
     // Aggiungi data accettazione e versione policy
     consensi.dataAccettazione = new Date();
     consensi.versionePolicy = this.currentPolicyVersion;
-    
+
     // Salva in localStorage
     this.setConsensoInStorage(consensi);
-    
+
     // Salva anche sul server e traccia metadati
     return this.salvaConsensiServer(consensi).pipe(
       tap(() => {
@@ -93,45 +93,46 @@ export class PrivacyConsentService {
         console.error('Error saving privacy consents to server:', error);
         // Anche in caso di errore considerare valida l'operazione lato client
         // Ma schedula un tentativo di reinvio in background
-        setTimeout(() => this.ritentaInvioConsensi(consensi), 10000);
+        //setTimeout(() => this.ritentaInvioConsensi(consensi), 10000);
         return of(true);
       })
     );
   }
 
   private salvaConsensiServer(consensi: ConsensoPrivacy): Observable<boolean> {
-    const userStr = this.storageService.getItem('utente');
+    /*const userStr = this.storageService.getItem('utente');
     const user = userStr ? JSON.parse(userStr) : null;
-    
+
     const consentDTO: ConsensoPrivacyDTO = {
       ...consensi,
       userId: user?.id || 0,
       userAgent: navigator.userAgent
     };
-    
-    return this.http.post<boolean>(`${environment.apiUrl}/privacy-consents`, consentDTO);
+
+    return this.http.post<boolean>(`${environment.apiUrl}/privacy-consents`, consentDTO);*/
+    return of(true);
   }
 
-  private ritentaInvioConsensi(consensi: ConsensoPrivacy): void {
+  /*private ritentaInvioConsensi(consensi: ConsensoPrivacy): void {
     console.log('Retrying sending consents to server...');
     this.salvaConsensiServer(consensi).subscribe({
       next: () => console.log('Consents successfully sent on retry'),
       error: err => console.error('Failed to send consents on retry', err)
     });
-  }
+  }*/
 
   salvaConsensi(consensi: ConsensoPrivacy): void {
     // Metodo legacy mantenuto per retrocompatibilità
     // Aggiungi data accettazione e versione
     consensi.dataAccettazione = new Date();
     consensi.versionePolicy = this.currentPolicyVersion;
-    
+
     // Salva in localStorage
     localStorage.setItem(this.storageKey, JSON.stringify(consensi));
-    
+
     // Aggiorna il subject
     this.consensoSubject.next(consensi);
-    
+
     // Tenta comunque di salvare sul server se disponibile
     this.salvaConsensiServer(consensi).subscribe({
       next: () => console.log('Consents also saved to server'),
@@ -146,7 +147,7 @@ export class PrivacyConsentService {
 
   verificaNecessitàConsenso(): boolean {
     const consensoSalvato = this.getConsensoFromStorage();
-    
+
     // Se non ci sono consensi, è necessario mostrarli
     if (!consensoSalvato) {
       console.log('Nessun consenso salvato trovato');
@@ -158,7 +159,7 @@ export class PrivacyConsentService {
       console.log('Consensi obbligatori non accettati');
       return true;
     }
-    
+
     // Verifica che la versione della policy sia aggiornata
     if (consensoSalvato.versionePolicy !== this.currentPolicyVersion) {
       console.log('Versione policy cambiata, richiesto nuovo consenso');
@@ -185,16 +186,16 @@ export class PrivacyConsentService {
   revocaConsensoOpzionale(tipoConsenso: 'marketing' | 'cookie'): Observable<boolean> {
     const consensi = this.consensoSubject.value;
     if (!consensi) return of(false);
-    
+
     // Non permettere revoca dei consensi obbligatori
     if (tipoConsenso === 'marketing' || tipoConsenso === 'cookie') {
       const consensiAggiornati = { ...consensi };
       consensiAggiornati[tipoConsenso] = false;
       consensiAggiornati.dataAccettazione = new Date(); // Aggiorna data
-      
+
       return this.accettaConsensi(consensiAggiornati);
     }
-    
+
     return of(false);
   }
 

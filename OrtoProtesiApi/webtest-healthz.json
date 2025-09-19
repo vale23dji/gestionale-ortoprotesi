@@ -1,0 +1,40 @@
+{
+  "name": "api-healthz",
+  "type": "Microsoft.Insights/webtests",
+  "apiVersion": "2022-06-15",
+  "location": "francecentral",
+  "kind": "standard",
+  "tags": {
+    "hidden-link:/subscriptions/7c046f8d-b09c-47b7-ae55-8a822fe7dfe4/resourceGroups/orto-protesi-rg/providers/microsoft.insights/components/ortoprotesi-api": "Resource"
+  },
+  "properties": {
+    "SyntheticMonitorId": "api-healthz",
+    "Name": "api-healthz",
+    "Description": "Availability /healthz api.orto-protesi.com",
+    "Enabled": true,
+    "Frequency": 300,
+    "Timeout": 30,
+    "Kind": "standard",
+    "RetryEnabled": true,
+    "Locations": [
+      { "Id": "emea-fr-pra-edge" },
+      { "Id": "emea-nl-ams-azr" }
+    ],
+    "Configuration": null,
+    "Request": {
+      "RequestUrl": "https://api.orto-protesi.com/healthz",
+      "HttpVerb": "GET",
+      "Headers": null,
+      "RequestBody": null,
+      "ParseDependentRequests": false,
+      "FollowRedirects": true
+    },
+    "ValidationRules": {
+      "ExpectedHttpStatusCode": 200,
+      "IgnoreHttpsStatusCode": false,
+      "SSLCheck": true,
+      "SSLCertRemainingLifetimeCheck": 7,
+      "ContentValidation": null
+    }
+  }
+}

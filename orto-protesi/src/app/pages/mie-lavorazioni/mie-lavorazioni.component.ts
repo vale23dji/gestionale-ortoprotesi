@@ -9,13 +9,14 @@ import { SharedService } from '../../shared.service';
 import { FormatDatetimePipe } from '../../pipes/format-datetime.pipe';
 import { StorageService } from '../../services/storage.service';
 import { Router } from '@angular/router';
+import { SecureLoggerService } from '../../services/SecureLogger.service';
 
 // Definizione dell'interfaccia
 interface LavorazioneDTO {
   id?: number;
   nomePaziente?: string;
   cognomePaziente?: string;
-  etaPaziente?: number;
+  etaPaziente?: number | null;
   tipiLavorazione?: string[];
   stato?: string;
   dataCreazione?: string;
@@ -47,7 +48,8 @@ export class MieLavorazioniComponent implements OnInit {
     public fileService: FileService,
     private sharedService: SharedService,
     private storageService: StorageService,
-    private router: Router
+    private router: Router,
+    private logger: SecureLoggerService // <-- AGGIUNT
   ) {}
 
   ngOnInit(): void {
@@ -63,6 +65,21 @@ export class MieLavorazioniComponent implements OnInit {
 
   loadLavorazioni(): void {
     console.log('Caricamento lavorazioni...');
+
+    this.apiService.getMieLavorazioni().subscribe({
+      next: (data) => {
+        this.lavorazioni = data.map((lav: any) => ({
+          ...lav,
+          dataCreazione: lav.dataCreazione instanceof Date
+            ? lav.dataCreazione.toISOString()
+            : lav.dataCreazione
+        }));
+        this.logger.info('MieLavorazioniComponent', `Ricevute ${this.lavorazioni.length} lavorazioni`);
+      },
+      error: (error) => {
+        this.logger.error('MieLavorazioniComponent', 'Errore caricamento lavorazioni', error);
+      }
+    });
 
     this.apiService.getMieLavorazioni().subscribe({
       next: (res: any) => {

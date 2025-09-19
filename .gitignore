@@ -44,3 +44,60 @@ lcov-report/
 *.stl
 *.zip
 *.bak
+
+# Config/app settings (non versionare)
+**/appsettings.json
+**/appsettings.*.local.json
+**/secrets.json
+
+# Database/DDL/backup (se non vuoi versionarli)
+*.ddl
+*.mdf
+*.ldf
+*.bak
+
+# Upload/runtime assets (limita alle cartelle di upload)
+**/uploads/**
+**/storage/**
+**/tmp_uploads/**
+
+# Publish/build .NET ovunque
+**/bin/**
+**/obj/**
+**/publish/**
+
+# Artefatti/binary
+*.dll
+*.pdb
+*.exe
+*.dylib
+*.so
+*.a
+*.lib
+
+# File autogenerati
+*.deps.json
+
+# Cache iCloud/macOS
+*.icloud
+
+# Archivi aggiuntivi
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar
+
+# Dati locali runtime
+nginx/data/
+ssl/
+
+# Publish specifico backend (ridondante ma esplicito)
+OrtoProtesiApi/publish/**
+OrtoProtesiApi/*.zip
+
+# Build/output generici
+**/out/**
+
+# (Già ok) Non versionare certificati/chiavi nella cartella ssl/
+# ssl/
