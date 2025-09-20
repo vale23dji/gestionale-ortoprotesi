@@ -1,0 +1,14 @@
+{
+  "/api": {
+    "target": "https://api.orto-protesi.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/uploads": {
+    "target": "https://api.orto-protesi.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
